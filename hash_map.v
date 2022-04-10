@@ -113,7 +113,6 @@ pub fn (mut m HashMap<K, V>) set<K, V>(key K, value V) {
 		m.rehash()
 	}
 	mut bucket := m.buckets[index]
-	assert bucket != 0
 	for pair in bucket.pairs {
 		mut p := pair
 		if p.key.equals(key) {
