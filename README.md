@@ -20,7 +20,7 @@ pub fn (s String) hash() int {
 }
 
 fn main() {
-	mut m := hashmap.new_hashmap<String, String>()
+	mut m := hashmap.new_hashmap<String, String>() ?
 	m.set(String{'Hello'}, String{'World'})
 	assert m.contains_key(String{'Hello'})
 	assert m.contains_value(String{'World'})
