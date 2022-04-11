@@ -8,9 +8,9 @@ struct HashMap<K, V> {
 mut:
 	pair_index int
 	pairs      []&Pair<K, V> // used in the iterator to keep the order of the pairs
+	buckets    []&Bucket<K, V> [required]
 pub mut:
-	buckets []&Bucket<K, V>
-	len     int
+	len int
 }
 
 struct Pair<K, V> {
@@ -32,7 +32,10 @@ pub:
 	initial_capacity int = hashmap.initial_capacity
 }
 
-pub fn new_hashmap<K, V>(config HashMapConfig) HashMap<K, V> {
+pub fn new_hashmap<K, V>(config HashMapConfig) ?HashMap<K, V> {
+	if config.initial_capacity <= 0 {
+		error('initial_capacity of hashmap must be greater than 0')
+	}
 	mut buckets := []&Bucket<K, V>{len: config.initial_capacity}
 	for i in 0 .. buckets.len {
 		buckets[i] = &Bucket<K, V>{}
@@ -143,8 +146,10 @@ pub fn (mut m HashMap<K, V>) remove(key K) bool {
 			m.pairs.delete(pair_index)
 			m.len--
 			if bucket.pairs.len == 0 {
-				m.buckets.delete(m.buckets.index(bucket))
-				m.rehash()
+				if m.buckets.len > 1 { // ensure the array never shrinks to 0 (which would break the hash % size calculation)
+					m.buckets.delete(m.buckets.index(bucket))
+					m.rehash()
+				}
 			}
 			return true
 		}
@@ -155,7 +160,7 @@ pub fn (mut m HashMap<K, V>) remove(key K) bool {
 fn (mut m HashMap<K, V>) rehash() {
 	old_buckets := m.buckets.clone()
 	m.pairs = []&Pair<K, V>{}
-	m.buckets = []&Bucket<K, V>{len: m.buckets.len}
+	m.buckets = []&Bucket<K, V>{len: old_buckets.len}
 	m.len = 0
 	for i in 0 .. m.buckets.len {
 		m.buckets[i] = &Bucket<K, V>{}
