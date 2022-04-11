@@ -29,7 +29,7 @@ pub mut:
 [params]
 pub struct HashMapConfig {
 pub:
-	initial_capacity int = initial_capacity
+	initial_capacity int = hashmap.initial_capacity
 }
 
 pub fn new_hashmap<K, V>(config HashMapConfig) HashMap<K, V> {
