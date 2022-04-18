@@ -52,7 +52,7 @@ pub fn (m HashMap<K, V>) contains_key(key K) bool {
 	key_hash := key.hash()
 	bucket := m.buckets[modulo(key_hash, m.buckets.len)] or { return false }
 	for pair in bucket.pairs {
-		if pair.key.hash() == key_hash {
+		if pair.key.equals(key) {
 			return true
 		}
 	}
@@ -65,7 +65,7 @@ pub fn (m HashMap<K, V>) contains_value(value V) bool {
 	}
 	for bucket in m.buckets {
 		for pair in bucket.pairs {
-			if pair.value == value {
+			if pair.value.equals(value) {
 				return true
 			}
 		}
