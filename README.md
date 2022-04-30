@@ -1,7 +1,7 @@
 # HashMap
 This is a hashmap/hashtable implementation written in V.
 <br>Since the standard `map` type in V does not allow for arbitrary key types, you can use this library when you need keys of different types than `string`, `integer`, `float`, `rune`, `enum` or `voidptr` ([which are allowed in the default map](https://github.com/vlang/v/blob/a0e7a46be4d468ecf61b0e6cd7c81f11ddbd4233/vlib/v/parser/parse_type.v#L131)).
-<br>Note that your keys must define both an `equals` and a `hash` method.
+<br>Note that both your key and value types must define an `equals` as well as a `hash` method.
 
 ## Example
 ```v
