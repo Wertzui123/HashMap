@@ -5,7 +5,7 @@ This is a hashmap/hashtable implementation written in V.
 
 ## Example
 ```v
-import hashmap
+import wertzui123.hashmap
 
 struct String {
 	str string
