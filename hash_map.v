@@ -117,10 +117,9 @@ pub fn (mut m HashMap<K, V>) set<K, V>(key K, value V) {
 	}
 	mut bucket := m.buckets[index]
 	assert voidptr(bucket) != 0
-	for pair in bucket.pairs {
-		mut p := pair
-		if p.key.equals(key) {
-			p.value = value
+	for mut pair in bucket.pairs {
+		if pair.key.equals(key) {
+			pair.value = value
 			return
 		}
 	}
