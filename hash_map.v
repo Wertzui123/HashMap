@@ -36,10 +36,7 @@ pub fn new_hashmap<K, V>(config HashMapConfig) ?HashMap<K, V> {
 	if config.initial_capacity <= 0 {
 		error('initial_capacity of hashmap must be greater than 0')
 	}
-	mut buckets := []&Bucket<K, V>{len: config.initial_capacity}
-	for i in 0 .. buckets.len {
-		buckets[i] = &Bucket<K, V>{}
-	}
+	mut buckets := unsafe { []&Bucket<K, V>{len: config.initial_capacity, init: &Bucket<K, V>{}} }
 	return HashMap<K, V>{
 		buckets: buckets
 	}
@@ -159,11 +156,10 @@ pub fn (mut m HashMap<K, V>) remove(key K) bool {
 fn (mut m HashMap<K, V>) rehash() {
 	old_buckets := m.buckets.clone()
 	m.pairs = []&Pair<K, V>{}
-	m.buckets = []&Bucket<K, V>{len: old_buckets.len}
-	m.len = 0
-	for i in 0 .. m.buckets.len {
-		m.buckets[i] = &Bucket<K, V>{}
+	unsafe {
+		m.buckets = []&Bucket<K, V>{len: old_buckets.len, init: &Bucket<K, V>{}}
 	}
+	m.len = 0
 	for bucket in old_buckets {
 		for pair in bucket.pairs {
 			m.set(pair.key, pair.value)
