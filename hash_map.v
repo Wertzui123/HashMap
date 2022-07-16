@@ -156,9 +156,7 @@ pub fn (mut m HashMap<K, V>) remove(key K) bool {
 fn (mut m HashMap<K, V>) rehash() {
 	old_buckets := m.buckets.clone()
 	m.pairs = []&Pair<K, V>{}
-	unsafe {
-		m.buckets = []&Bucket<K, V>{len: old_buckets.len, init: &Bucket<K, V>{}}
-	}
+	m.buckets = unsafe { []&Bucket<K, V>{len: old_buckets.len, init: &Bucket<K, V>{}} }
 	m.len = 0
 	for bucket in old_buckets {
 		for pair in bucket.pairs {
