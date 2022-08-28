@@ -194,6 +194,19 @@ pub fn (a HashMap<K, V>) equals(b HashMap<K, V>) bool {
 	return true
 }
 
+pub fn (mut m HashMap<K, V>) reverse() HashMap<K, V> {
+	mut reverse := HashMap<K, V>{
+		buckets: unsafe { []&Bucket<K, V>{len: m.len, init: &Bucket<K, V>{}} }
+		pairs: []&Pair<K, V>{}
+		len: 0
+		pair_index: 0
+	}
+	for pair in m.pairs.reverse() {
+		reverse.set(pair.key, pair.value)
+	}
+	return reverse
+}
+
 pub fn (mut m HashMap<K, V>) next() ?Pair<K, V> {
 	if m.len == 0 {
 		return none
