@@ -4,16 +4,16 @@ const (
 	initial_capacity = 4
 )
 
-struct HashMap<K, V> {
+struct HashMap[K, V] {
 mut:
 	pair_index int
-	pairs      []&Pair<K, V> // used in the iterator to keep the order of the pairs
-	buckets    []&Bucket<K, V> [required]
+	pairs      []&Pair[K, V] // used in the iterator to keep the order of the pairs
+	buckets    []&Bucket[K, V] [required]
 pub mut:
 	len int
 }
 
-struct Pair<K, V> {
+struct Pair[K, V] {
 pub:
 	key K
 pub mut:
@@ -21,9 +21,9 @@ pub mut:
 }
 
 [heap]
-struct Bucket<K, V> {
+struct Bucket[K, V] {
 pub mut:
-	pairs []&Pair<K, V>
+	pairs []&Pair[K, V]
 }
 
 [params]
@@ -32,17 +32,17 @@ pub:
 	initial_capacity int = hashmap.initial_capacity
 }
 
-pub fn new_hashmap<K, V>(config HashMapConfig) ?HashMap<K, V> {
+pub fn new_hashmap[K, V](config HashMapConfig) ?HashMap[K, V] {
 	if config.initial_capacity <= 0 {
 		error('initial_capacity of hashmap must be greater than 0')
 	}
-	mut buckets := unsafe { []&Bucket<K, V>{len: config.initial_capacity, init: &Bucket<K, V>{}} }
-	return HashMap<K, V>{
+	mut buckets := unsafe { []&Bucket[K, V]{len: config.initial_capacity, init: &Bucket[K, V]{}} }
+	return HashMap[K, V]{
 		buckets: buckets
 	}
 }
 
-pub fn (m HashMap<K, V>) contains_key(key K) bool {
+pub fn (m HashMap[K, V]) contains_key(key K) bool {
 	if m.buckets.len == 0 {
 		return false
 	}
@@ -56,7 +56,7 @@ pub fn (m HashMap<K, V>) contains_key(key K) bool {
 	return false
 }
 
-pub fn (m HashMap<K, V>) contains_value(value V) bool {
+pub fn (m HashMap[K, V]) contains_value(value V) bool {
 	if m.buckets.len == 0 {
 		return false
 	}
@@ -70,7 +70,7 @@ pub fn (m HashMap<K, V>) contains_value(value V) bool {
 	return false
 }
 
-pub fn (m HashMap<K, V>) get_value<K>(key K) ?V {
+pub fn (m HashMap[K, V]) get_value[K](key K) ?V {
 	if m.buckets.len == 0 {
 		return none
 	}
@@ -83,7 +83,7 @@ pub fn (m HashMap<K, V>) get_value<K>(key K) ?V {
 	return none
 }
 
-pub fn (m HashMap<K, V>) get_key<K>(value V) ?K {
+pub fn (m HashMap[K, V]) get_key[K](value V) ?K {
 	if m.buckets.len == 0 {
 		return none
 	}
@@ -97,16 +97,16 @@ pub fn (m HashMap<K, V>) get_key<K>(value V) ?K {
 	return none
 }
 
-pub fn (mut m HashMap<K, V>) set<K, V>(key K, value V) {
+pub fn (mut m HashMap[K, V]) set[K, V](key K, value V) {
 	key_hash := key.hash()
 	mut index := modulo(key_hash, m.buckets.len)
 	assert index >= 0
 	if index >= m.buckets.len {
-		pair := Pair<K, V>{
+		pair := Pair[K, V]{
 			key: key
 			value: value
 		}
-		m.buckets << &Bucket<K, V>{
+		m.buckets << &Bucket[K, V]{
 			pairs: [&pair]
 		}
 		m.pairs << &pair
@@ -120,7 +120,7 @@ pub fn (mut m HashMap<K, V>) set<K, V>(key K, value V) {
 			return
 		}
 	}
-	pair := Pair<K, V>{
+	pair := Pair[K, V]{
 		key: key
 		value: value
 	}
@@ -129,7 +129,7 @@ pub fn (mut m HashMap<K, V>) set<K, V>(key K, value V) {
 	m.len++
 }
 
-pub fn (mut m HashMap<K, V>) remove(key K) bool {
+pub fn (mut m HashMap[K, V]) remove(key K) bool {
 	key_hash := key.hash()
 	mut bucket := m.buckets[modulo(key_hash, m.buckets.len)] or { return false }
 	for mut pair in bucket.pairs {
@@ -153,10 +153,10 @@ pub fn (mut m HashMap<K, V>) remove(key K) bool {
 	return false
 }
 
-fn (mut m HashMap<K, V>) rehash() {
+fn (mut m HashMap[K, V]) rehash() {
 	old_buckets := m.buckets.clone()
-	m.pairs = []&Pair<K, V>{}
-	m.buckets = unsafe { []&Bucket<K, V>{len: old_buckets.len, init: &Bucket<K, V>{}} }
+	m.pairs = []&Pair[K, V]{}
+	m.buckets = unsafe { []&Bucket[K, V]{len: old_buckets.len, init: &Bucket[K, V]{}} }
 	m.len = 0
 	for bucket in old_buckets {
 		for pair in bucket.pairs {
@@ -165,7 +165,7 @@ fn (mut m HashMap<K, V>) rehash() {
 	}
 }
 
-pub fn (m HashMap<K, V>) hash() int {
+pub fn (m HashMap[K, V]) hash() int {
 	// TODO: Implement a better hash function
 	mut i := 0
 	for bucket in m.buckets {
@@ -177,7 +177,7 @@ pub fn (m HashMap<K, V>) hash() int {
 	return i
 }
 
-pub fn (a HashMap<K, V>) equals(b HashMap<K, V>) bool {
+pub fn (a HashMap[K, V]) equals(b HashMap[K, V]) bool {
 	if a.len != b.len {
 		return false
 	}
@@ -194,10 +194,10 @@ pub fn (a HashMap<K, V>) equals(b HashMap<K, V>) bool {
 	return true
 }
 
-pub fn (mut m HashMap<K, V>) reverse() HashMap<K, V> {
-	mut reverse := HashMap<K, V>{
-		buckets: unsafe { []&Bucket<K, V>{len: m.buckets.len, init: &Bucket<K, V>{}} }
-		pairs: []&Pair<K, V>{}
+pub fn (mut m HashMap[K, V]) reverse() HashMap[K, V] {
+	mut reverse := HashMap[K, V]{
+		buckets: unsafe { []&Bucket[K, V]{len: m.buckets.len, init: &Bucket[K, V]{}} }
+		pairs: []&Pair[K, V]{}
 		len: 0
 		pair_index: 0
 	}
@@ -207,7 +207,7 @@ pub fn (mut m HashMap<K, V>) reverse() HashMap<K, V> {
 	return reverse
 }
 
-pub fn (mut m HashMap<K, V>) next() ?Pair<K, V> {
+pub fn (mut m HashMap[K, V]) next() ?Pair[K, V] {
 	if m.len == 0 {
 		return none
 	}
