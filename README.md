@@ -7,26 +7,26 @@ This is a hashmap/hashtable implementation written in V.
 ```v
 import wertzui123.hashmap
 
-struct String {
+struct Str {
 	str string
 }
 
-pub fn (s1 String) equals(s2 String) bool {
+pub fn (s1 Str) equals(s2 Str) bool {
 	return s1.str == s2.str
 }
 
-pub fn (s String) hash() int {
+pub fn (s Str) hash() int {
 	return s.str.hash()
 }
 
 fn main() {
-	mut m := hashmap.new_hashmap<String, String>()?
-	m.set(String{'Hello'}, String{'World'})
-	assert m.contains_key(String{'Hello'})
-	assert m.contains_value(String{'World'})
-	assert m.get_value(String{'Hello'})? == String{'World'}
-	assert m.get_key(String{'World'})? == String{'Hello'}
-	m.remove(String{'Hello'})
+	mut m := hashmap.new_hashmap[Str, Str]()?
+	m.set(Str{'Hello'}, Str{'World'})
+	assert m.contains_key(Str{'Hello'})
+	assert m.contains_value(Str{'World'})
+	assert m.get_value(Str{'Hello'})? == Str{'World'}
+	assert m.get_key(Str{'World'})? == Str{'Hello'}
+	m.remove(Str{'Hello'})
 	assert m.len == 0
 }
 ```
