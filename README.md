@@ -22,7 +22,7 @@ pub fn (s Str) hash() int {
 }
 
 fn main() {
-	mut m := hashmap.new_hashmap[Str, Str]()?
+	mut m := hashmap.new_hashmap[Str, Str]()!
 	m.set(Str{'Hello'}, Str{'World'})
 	assert m.contains_key(Str{'Hello'})
 	assert m.contains_value(Str{'World'})

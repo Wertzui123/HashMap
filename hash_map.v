@@ -32,7 +32,7 @@ pub:
 	initial_capacity int = hashmap.initial_capacity
 }
 
-pub fn new_hashmap[K, V](config HashMapConfig) ?HashMap[K, V] {
+pub fn new_hashmap[K, V](config HashMapConfig) !HashMap[K, V] {
 	if config.initial_capacity <= 0 {
 		error('initial_capacity of hashmap must be greater than 0')
 	}
