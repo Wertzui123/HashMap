@@ -8,7 +8,7 @@ struct HashMap[K, V] {
 mut:
 	pair_index int
 	pairs      []&Pair[K, V] // used in the iterator to keep the order of the pairs
-	buckets    []&Bucket[K, V] [required]
+	buckets    []&Bucket[K, V] @[required]
 pub mut:
 	len int
 }
@@ -20,13 +20,13 @@ pub mut:
 	value V
 }
 
-[heap]
+@[heap]
 struct Bucket[K, V] {
 pub mut:
 	pairs []&Pair[K, V]
 }
 
-[params]
+@[params]
 pub struct HashMapConfig {
 pub:
 	initial_capacity int = hashmap.initial_capacity
